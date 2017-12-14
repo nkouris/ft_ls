@@ -6,11 +6,22 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/11 17:06:10 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/12 21:32:30 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/13 17:45:57 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+void		push_node(t_lsnode *new, t_lsnode **root, t_lssort **args)
+{
+	t_lsnode **temp;
+
+	temp = root;
+	args = 0;
+	while ((*temp)->next)
+		temp = &(*temp)->next;
+	(*temp)->next = new;
+}
 
 void		usage_warning(char bad)
 {
@@ -19,17 +30,19 @@ void		usage_warning(char bad)
 	exit (1);	
 }
 
-t_lsleaf	*create_leaf(struct dirent *element)
+t_lsnode	*create_node(struct dirent *element, DIR *dir)
 {
-	t_lsleaf	*new;
+	t_lsnode	*new;
 
-	if (!(new = (t_lsleaf *)malloc(sizeof(t_lsleaf))))
+	if (!(new = (t_lsnode *)ft_memalloc(sizeof(t_lsnode))))
 		exit (1);
 	if (element)
 	{
+		new->dir = dir;
 		new->fserial = element->d_ino;
-		new->namelen = ft_strlen(element->d_name);
-		new->name = (char *)ft_memalloc(new->namelen);
+		new->namelen = element->d_namlen;
+		new->name = (char *)ft_memalloc(new->namelen + 1);
+		new->next = 0;
 		ft_strcpy(new->name, (const char *)(element->d_name));
 	}
 	return (new);

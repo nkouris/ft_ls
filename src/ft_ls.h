@@ -6,15 +6,14 @@
 #include <stdlib.h>
 #include "libft/libft.h"
 
-typedef	struct		s_lsleaf
+typedef	struct		s_lsnode
 {
 	DIR				*dir;
 	ino_t			fserial;
 	char			*name;
 	unsigned int	namelen;
-	struct s_lsleaf	*left;
-	struct s_lsleaf	*right;
-}					t_lsleaf;
+	struct s_lsnode	*next;
+}					t_lsnode;
 
 typedef struct		s_args
 {
@@ -29,7 +28,8 @@ typedef struct		s_args
  * FT_LS_HANDLING
 **/
 
-t_lsleaf	*create_leaf(struct dirent *element);
+void		push_node(t_lsnode *new, t_lsnode **root, t_lssort **args);
+t_lsnode	*create_node(struct dirent *element, DIR *dir);
 t_lssort	*create_args(void);
 void		parse_args(char ***argv, t_lssort **args);
 
