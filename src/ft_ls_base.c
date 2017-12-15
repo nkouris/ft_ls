@@ -6,31 +6,31 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/11 11:00:18 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/13 17:57:01 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/14 14:06:45 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-static void	print_directories(t_lsnode **root)
+static void	print_directories(t_lsnode *root)
 {
 	int		pad;
 	int		i;
 
 	i = 0;
-	while (*root)
+	while (root)
 	{
 		if (i)
-			pad = 10;
+			pad = root->namelen + 4;
 		else
 			pad = 0;
-		ft_printf("%*s", pad, (*root)->name);
-		root = &((*root)->next);
+		ft_printf("%*s", pad, root->name);
+		root = root->next;
 		i++;
 	}
 }
 
-static void	store_current_dir(t_lsnode **root, t_lssort **args, char *str)
+static void	store_current_dir(t_lsnode **root, t_lssort *args, char *str)
 {
 	t_lsnode		*new;
 	struct dirent	*element;
@@ -51,14 +51,14 @@ static void	store_current_dir(t_lsnode **root, t_lssort **args, char *str)
 	}
 }
 
-static void	store_explicit_dir(t_lsnode **root, t_lssort **args, char **argv)
+static void	store_explicit_dir(t_lsnode **root, t_lssort *args, char **argv)
 {
 	while (*argv)
 		store_current_dir(root, args, *argv++);
 }
 
 
-static void	store_directories(t_lsnode **root, t_lssort **args, char **argv)
+static void	store_directories(t_lsnode **root, t_lssort *args, char **argv)
 {
 	if (!argv)
 		store_current_dir(root, args, ".");
@@ -75,20 +75,16 @@ int		main(int argc, char **argv)
 	if (!(root = create_node(0, 0)) 
 		|| !(args = create_args()))
 		return (1);
-	
 	if (argc > 1)
 	{
-		parse_args(&argv, &args);
+		parse_args(&argv, args);
 		argv++;
 	}
 	else
 		argv = 0;
-/*	printf("l: %d\n", args->l);
-	printf("R: %d\n", args->R);
-	printf("a: %d\n", args->a);
-	printf("r: %d\n", args->r);
-	printf("t: %d\n", args->t);*/
-	store_directories(&root, &args, argv);
-	print_directories(&root);
+	store_directories(&root, args, argv);
+	print_directories(root);
+	closedir(root->dir);
+	cleanup(root);
 	return(0);
 }

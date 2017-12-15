@@ -28,9 +28,15 @@ typedef struct		s_args
  * FT_LS_HANDLING
 **/
 
-void		push_node(t_lsnode *new, t_lsnode **root, t_lssort **args);
+void		push_node(t_lsnode *new, t_lsnode **root, t_lssort *args);
 t_lsnode	*create_node(struct dirent *element, DIR *dir);
 t_lssort	*create_args(void);
-void		parse_args(char ***argv, t_lssort **args);
+void		parse_args(char ***argv, t_lssort *args);
+
+/**
+ * FT_LS_UTILITY
+**/
+
+void		cleanup(t_lsnode *root);
 
 #endif

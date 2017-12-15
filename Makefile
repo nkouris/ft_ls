@@ -8,6 +8,7 @@ OBJINC = $(patsubst %, %.o, $(INC))
 # LS SOURCE
 SRC += src/ft_ls_base
 SRC += src/ft_ls_handling
+SRC += src/ft_ls_utility
 
 # GENERAL LIBFT FUNCTIONS
 INC += src/libft/ft_memalloc

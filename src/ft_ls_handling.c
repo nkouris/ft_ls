@@ -6,13 +6,13 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/11 17:06:10 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/13 17:45:57 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/14 14:06:06 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void		push_node(t_lsnode *new, t_lsnode **root, t_lssort **args)
+void		push_node(t_lsnode *new, t_lsnode **root, t_lssort *args)
 {
 	t_lsnode **temp;
 
@@ -52,12 +52,12 @@ t_lssort	*create_args(void)
 {
 	t_lssort	*args;
 
-	if (!(args = (t_lssort *)malloc(sizeof(t_lssort))))
+	if (!(args = (t_lssort *)ft_memalloc(sizeof(t_lssort))))
 		exit (1);
 	return (args);
 }
 
-void		parse_args(char ***argv, t_lssort **args)
+void		parse_args(char ***argv, t_lssort *args)
 {
 	int found;
 
@@ -68,20 +68,20 @@ void		parse_args(char ***argv, t_lssort **args)
 		while (***argv)
 		{
 			found = 0;
-			if (***argv == 'l' ? (*args)->l = 1 : 0)
+			if (***argv == 'l' ? (args)->l = 1 : 0)
 				(**argv)++ ? found++ : found;
-			if (***argv == 'R' ? (*args)->R = 1 : 0)
+			if (***argv == 'R' ? (args)->R = 1 : 0)
 				(**argv)++ ? found++ : found;
-			if (***argv == 'a' ? (*args)->a = 1 : 0)
+			if (***argv == 'a' ? (args)->a = 1 : 0)
 				(**argv)++ ? found++ : found;
-			if (***argv == 'r' ? (*args)->r = 1 : 0)
+			if (***argv == 'r' ? (args)->r = 1 : 0)
 				(**argv)++ ? found++ : found;
-			if (***argv == 't' ? (*args)->t = 1 : 0)
+			if (***argv == 't' ? (args)->t = 1 : 0)
 				(**argv)++ ? found++ : found;
 			if (!found)
 				usage_warning(***argv);
 		}
 	}
 	else
-		free(*args);
+		free(args);
 }
