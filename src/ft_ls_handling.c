@@ -6,13 +6,13 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/11 17:06:10 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/14 14:06:06 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/15 17:47:56 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void		push_node(t_lsnode *new, t_lsnode **root, t_lssort *args)
+void		push_node(t_lsnode *node, t_lsnode **root, t_lssort *args)
 {
 	t_lsnode **temp;
 
@@ -20,7 +20,7 @@ void		push_node(t_lsnode *new, t_lsnode **root, t_lssort *args)
 	args = 0;
 	while ((*temp)->next)
 		temp = &(*temp)->next;
-	(*temp)->next = new;
+	(*temp)->next = node;
 }
 
 void		usage_warning(char bad)
@@ -32,20 +32,29 @@ void		usage_warning(char bad)
 
 t_lsnode	*create_node(struct dirent *element, DIR *dir)
 {
-	t_lsnode	*new;
+	t_lsnode	*node;
+	struct stat	*sbuf;
 
-	if (!(new = (t_lsnode *)ft_memalloc(sizeof(t_lsnode))))
+	if (!(node = (t_lsnode *)ft_memalloc(sizeof(t_lsnode)))
+		|| !(sbuf = (struct stat *)ft_memalloc(sizeof(struct stat))))
 		exit (1);
+/* Gather base info */
 	if (element)
 	{
-		new->dir = dir;
-		new->fserial = element->d_ino;
-		new->namelen = element->d_namlen;
-		new->name = (char *)ft_memalloc(new->namelen + 1);
-		new->next = 0;
-		ft_strcpy(new->name, (const char *)(element->d_name));
+		node->dir = dir;
+		node->namelen = element->d_namlen;
+		node->name = (char *)ft_memalloc(node->namelen + 1);
+		node->next = 0;
+		node->sbuf = sbuf;
+		ft_memset(node->perms, '-', 10);
+		ft_strcpy(node->name, (const char *)(element->d_name));
+/* Gather stat info */
+		stat((const char *)node->name, sbuf);
+		cat_files(node);
 	}
-	return (new);
+	else
+		ft_memdel((void **)&sbuf);
+	return (node);
 }
 
 t_lssort	*create_args(void)
@@ -83,5 +92,5 @@ void		parse_args(char ***argv, t_lssort *args)
 		}
 	}
 	else
-		free(args);
+		ft_memdel((void **)&args);
 }

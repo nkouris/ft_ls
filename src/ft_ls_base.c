@@ -6,36 +6,62 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/11 11:00:18 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/14 14:06:45 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/15 20:26:59 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-static void	print_directories(t_lsnode *root)
+static void	print_ldirectories(t_lsnode *root)
+{
+	t_lsnode	*temp;
+	int			blocks;
+
+	temp = root;
+	blocks = 0;
+	while (temp)
+	{
+		blocks = blocks + temp->sbuf->st_blocks;
+		temp = temp->next;
+	}
+	ft_printf("total %d\n", blocks);
+	while (root)
+	{
+		ft_printf("%-12s%-*d%s\n", root->perms, (sizeof(root->namelen) / 4) + 1,
+		root->sbuf->st_nlink, root->name);
+		root = root->next;
+	}
+}
+
+static void	print_directories(t_lsnode *root, t_lssort *args)
 {
 	int		pad;
 	int		i;
 
 	i = 0;
-	while (root)
+	if (args->l)
+		print_ldirectories(root);
+	else
 	{
-		if (i)
-			pad = root->namelen + 4;
-		else
-			pad = 0;
-		ft_printf("%*s", pad, root->name);
-		root = root->next;
-		i++;
+		while (root)
+		{
+			if (i)
+				pad = root->namelen + 4;
+			else
+				pad = 0;
+			ft_printf("%*s", pad, root->name);
+			root = root->next;
+			i++;
+		}
 	}
 }
 
 static void	store_current_dir(t_lsnode **root, t_lssort *args, char *str)
 {
-	t_lsnode		*new;
+	t_lsnode		*node;
 	struct dirent	*element;
 
-	new = 0;
+	node = 0;
 	element = 0;
 	if (!((*root)->dir = opendir(str)))
 		exit (1);
@@ -45,25 +71,21 @@ static void	store_current_dir(t_lsnode **root, t_lssort *args, char *str)
 			(*root) = create_node(element, (*root)->dir);
 		else
 		{
-			new = create_node(element, (*root)->dir);
-			push_node(new, root, args);
+			node = create_node(element, (*root)->dir);
+			push_node(node, root, args);
 		}
 	}
 }
-
-static void	store_explicit_dir(t_lsnode **root, t_lssort *args, char **argv)
-{
-	while (*argv)
-		store_current_dir(root, args, *argv++);
-}
-
 
 static void	store_directories(t_lsnode **root, t_lssort *args, char **argv)
 {
 	if (!argv)
 		store_current_dir(root, args, ".");
 	else
-		store_explicit_dir(root, args, argv);
+	{
+		while (*argv)
+			store_current_dir(root, args, *argv++);
+	}
 }
 
 int		main(int argc, char **argv)
@@ -78,12 +100,13 @@ int		main(int argc, char **argv)
 	if (argc > 1)
 	{
 		parse_args(&argv, args);
-		argv++;
+		args ? argv = 0 : argv++;
 	}
 	else
 		argv = 0;
 	store_directories(&root, args, argv);
-	print_directories(root);
+	argsact(args, &root);
+	print_directories(root, args);
 	closedir(root->dir);
 	cleanup(root);
 	return(0);

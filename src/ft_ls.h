@@ -5,13 +5,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "libft/libft.h"
+#include <sys/stat.h>
 
 typedef	struct		s_lsnode
 {
 	DIR				*dir;
 	ino_t			fserial;
 	char			*name;
+	char			perms[11];
 	unsigned int	namelen;
+	struct stat		*sbuf;
+/* Switches */
+	unsigned int	isdir : 1;
+
 	struct s_lsnode	*next;
 }					t_lsnode;
 
@@ -37,6 +43,8 @@ void		parse_args(char ***argv, t_lssort *args);
  * FT_LS_UTILITY
 **/
 
+void		argsact(t_lssort *args, t_lsnode **root);
 void		cleanup(t_lsnode *root);
+void		cat_files(t_lsnode *node);
 
 #endif
