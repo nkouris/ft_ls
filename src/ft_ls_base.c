@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/11 11:00:18 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/15 20:26:59 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/16 16:29:44 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,9 @@ static void	print_ldirectories(t_lsnode *root)
 	ft_printf("total %d\n", blocks);
 	while (root)
 	{
-		ft_printf("%-12s%-*d%s\n", root->perms, (sizeof(root->namelen) / 4) + 1,
-		root->sbuf->st_nlink, root->name);
+		ft_printf("%-12s%-*d%*d %-s\n", root->perms, root->m_nlink + 1,
+		root->sbuf->st_nlink, root->m_bytelen, root->sbuf->st_size,
+		root->name);
 		root = root->next;
 	}
 }

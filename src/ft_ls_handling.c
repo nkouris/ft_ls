@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/11 17:06:10 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/15 17:47:56 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/16 15:02:33 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,17 @@ void		push_node(t_lsnode *node, t_lsnode **root, t_lssort *args)
 	temp = root;
 	args = 0;
 	while ((*temp)->next)
+	{
+		if ((*temp)->m_bytelen < node->m_bytelen)
+			(*temp)->m_bytelen = node->m_bytelen;
+		else
+			node->m_bytelen = (*temp)->m_bytelen;
+		if ((*temp)->m_nlink < node->m_nlink)
+			(*temp)->m_nlink = node->m_nlink;
+		else
+			node->m_nlink = (*temp)->m_nlink;
 		temp = &(*temp)->next;
+	}
 	(*temp)->next = node;
 }
 
@@ -50,6 +60,8 @@ t_lsnode	*create_node(struct dirent *element, DIR *dir)
 		ft_strcpy(node->name, (const char *)(element->d_name));
 /* Gather stat info */
 		stat((const char *)node->name, sbuf);
+		node->m_bytelen = ft_numlen(node->sbuf->st_size);
+		node->m_nlink = ft_numlen(node->sbuf->st_nlink);
 		cat_files(node);
 	}
 	else

@@ -14,6 +14,10 @@ typedef	struct		s_lsnode
 	char			*name;
 	char			perms[11];
 	unsigned int	namelen;
+	unsigned int	m_nlink;
+	unsigned int	m_bytelen;
+	unsigned int	m_usnlen;
+	unsigned int	m_datelen;
 	struct stat		*sbuf;
 /* Switches */
 	unsigned int	isdir : 1;
@@ -46,5 +50,6 @@ void		parse_args(char ***argv, t_lssort *args);
 void		argsact(t_lssort *args, t_lsnode **root);
 void		cleanup(t_lsnode *root);
 void		cat_files(t_lsnode *node);
+int			ft_numlen(int num);
 
 #endif

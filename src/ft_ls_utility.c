@@ -6,31 +6,51 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/14 12:58:50 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/15 19:30:50 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/16 16:05:24 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+int			ft_numlen(int num)
+{
+	int i;
+
+	i = 0;
+	if (num == -2147483648)
+		return (10);
+	if (num < 0)
+		num = num * -1;
+	while (num)
+	{
+		num = num / 10;
+		i++;
+	}
+	return (i);
+}
 
 static void	rmhidden(t_lsnode **root)
 {
 	t_lsnode *front;
 	t_lsnode *back;
 
-	front = *root;
-	if ((*root)->name[0] == '.')
+	front = (*root);
+	while ((*root)->name[0] == '.')
 	{
-		(*root) = front->next;
+		(*root) = (*root)->next;
 		ft_memdel((void **)&front);
 		front = (*root);
 	}
 	while (front)
 	{
-		if (front->name[0] == '.')
+		while (front->name[0] == '.')
 		{
 			back->next = front->next;
 			ft_memdel((void **)&front);
-			front = back->next;
+			if (back->next)
+				front = back->next;
+			else
+				break ;
 		}
 		back = front;
 		front ? front = front->next : front;
