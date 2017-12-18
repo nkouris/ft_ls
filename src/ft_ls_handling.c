@@ -6,11 +6,47 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/11 17:06:10 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/16 15:02:33 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/17 21:09:49 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+#define SNODE node->sbuf->st_mode
+/*
+void		pmarks(t_lsnode *node)
+{
+	if (node->perms[0] == 'l')
+	{
+		stat
+}
+*/
+void		cat_files(t_lsnode *node)
+{
+	if ((SNODE & S_IFDIR) == S_IFDIR)
+		node->perms[0] = 'd';
+	if ((SNODE & S_IFLNK) == S_IFLNK)
+		node->perms[0] = 'l';
+	if ((SNODE & S_IRUSR) == S_IRUSR)
+		node->perms[1] = 'r';
+	if ((SNODE & S_IWUSR) == S_IWUSR)
+		node->perms[2] = 'w';
+	if ((SNODE & S_IXUSR) == S_IXUSR)
+		node->perms[3] = 'x';
+	if ((SNODE & S_IRGRP) == S_IRGRP)
+		node->perms[4] = 'r';
+	if ((SNODE & S_IWGRP) == S_IWGRP)
+		node->perms[5] = 'w';
+	if ((SNODE & S_IXGRP) == S_IXGRP)
+		node->perms[6] = 'x';
+	if ((SNODE & S_IROTH) == S_IROTH)
+		node->perms[7] = 'r';
+	if ((SNODE & S_IWOTH) == S_IWOTH)
+		node->perms[8] = 'w';
+	if ((SNODE & S_IXOTH) == S_IXOTH)
+		node->perms[9] = 'x';
+//	pmarks(node);
+}
 
 void		push_node(t_lsnode *node, t_lsnode **root, t_lssort *args)
 {
@@ -18,29 +54,17 @@ void		push_node(t_lsnode *node, t_lsnode **root, t_lssort *args)
 
 	temp = root;
 	args = 0;
+	if (!(*temp)->next)
+		fwidth_match(temp, node);
 	while ((*temp)->next)
 	{
-		if ((*temp)->m_bytelen < node->m_bytelen)
-			(*temp)->m_bytelen = node->m_bytelen;
-		else
-			node->m_bytelen = (*temp)->m_bytelen;
-		if ((*temp)->m_nlink < node->m_nlink)
-			(*temp)->m_nlink = node->m_nlink;
-		else
-			node->m_nlink = (*temp)->m_nlink;
+		fwidth_match(temp, node);	
 		temp = &(*temp)->next;
 	}
 	(*temp)->next = node;
 }
 
-void		usage_warning(char bad)
-{
-	ft_printf("ls: illegal option -- %c\n", bad);
-	ft_printf("usage available: ls [-lartR] [file ...]\n");
-	exit (1);	
-}
-
-t_lsnode	*create_node(struct dirent *element, DIR *dir)
+t_lsnode	*create_node(struct dirent *element, DIR *dir, char *str)
 {
 	t_lsnode	*node;
 	struct stat	*sbuf;
@@ -52,16 +76,15 @@ t_lsnode	*create_node(struct dirent *element, DIR *dir)
 	if (element)
 	{
 		node->dir = dir;
-		node->namelen = element->d_namlen;
-		node->name = (char *)ft_memalloc(node->namelen + 1);
-		node->next = 0;
+		node->name = (char *)ft_memalloc(sizeof(element->d_name) + 1);
 		node->sbuf = sbuf;
 		ft_memset(node->perms, '-', 10);
 		ft_strcpy(node->name, (const char *)(element->d_name));
 /* Gather stat info */
-		stat((const char *)node->name, sbuf);
-		node->m_bytelen = ft_numlen(node->sbuf->st_size);
-		node->m_nlink = ft_numlen(node->sbuf->st_nlink);
+		node->fullpath = strfpath(node, str);
+		lstat((const char *)node->fullpath, sbuf);
+/* Gather username and group */
+		use_stats(node);
 		cat_files(node);
 	}
 	else
@@ -69,40 +92,31 @@ t_lsnode	*create_node(struct dirent *element, DIR *dir)
 	return (node);
 }
 
-t_lssort	*create_args(void)
-{
-	t_lssort	*args;
-
-	if (!(args = (t_lssort *)ft_memalloc(sizeof(t_lssort))))
-		exit (1);
-	return (args);
-}
-
-void		parse_args(char ***argv, t_lssort *args)
+void		check_args(char ***argv, t_lssort **args)
 {
 	int found;
 
-	if ((*argv)[1][0] == '-')
+	if ((*++(*argv))[0] == '-')
 	{
-		(*argv)++;
 		(**argv)++;
 		while (***argv)
 		{
 			found = 0;
-			if (***argv == 'l' ? (args)->l = 1 : 0)
+			if (***argv == 'l' ? (*args)->l = 1 : 0)
 				(**argv)++ ? found++ : found;
-			if (***argv == 'R' ? (args)->R = 1 : 0)
+			if (***argv == 'R' ? (*args)->R = 1 : 0)
 				(**argv)++ ? found++ : found;
-			if (***argv == 'a' ? (args)->a = 1 : 0)
+			if (***argv == 'a' ? (*args)->a = 1 : 0)
 				(**argv)++ ? found++ : found;
-			if (***argv == 'r' ? (args)->r = 1 : 0)
+			if (***argv == 'r' ? (*args)->r = 1 : 0)
 				(**argv)++ ? found++ : found;
-			if (***argv == 't' ? (args)->t = 1 : 0)
+			if (***argv == 't' ? (*args)->t = 1 : 0)
 				(**argv)++ ? found++ : found;
 			if (!found)
 				usage_warning(***argv);
 		}
+		(*argv)++;
 	}
 	else
-		ft_memdel((void **)&args);
+		ft_memdel((void **)args);
 }

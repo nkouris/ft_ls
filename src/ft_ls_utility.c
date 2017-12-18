@@ -6,11 +6,22 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/14 12:58:50 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/16 16:05:24 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/17 19:31:23 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+char		*strfpath(t_lsnode *node, char *str)
+{
+	char *fullpath;
+
+	fullpath = ft_strnew(sizeof(node->name) + sizeof(str) + 1);
+	ft_strcat(fullpath, (const char *)str);
+	ft_strcat(fullpath, "/");
+	ft_strcat(fullpath, (const char *)node->name);
+	return (fullpath);
+}
 
 int			ft_numlen(int num)
 {
@@ -29,38 +40,13 @@ int			ft_numlen(int num)
 	return (i);
 }
 
-static void	rmhidden(t_lsnode **root)
+t_lssort	*create_args(void)
 {
-	t_lsnode *front;
-	t_lsnode *back;
+	t_lssort	*args;
 
-	front = (*root);
-	while ((*root)->name[0] == '.')
-	{
-		(*root) = (*root)->next;
-		ft_memdel((void **)&front);
-		front = (*root);
-	}
-	while (front)
-	{
-		while (front->name[0] == '.')
-		{
-			back->next = front->next;
-			ft_memdel((void **)&front);
-			if (back->next)
-				front = back->next;
-			else
-				break ;
-		}
-		back = front;
-		front ? front = front->next : front;
-	}
-}
-
-void		argsact(t_lssort *args, t_lsnode **root)
-{
-	if (!args || !args->a)
-		rmhidden(root);
+	if (!(args = (t_lssort *)ft_memalloc(sizeof(t_lssort))))
+		exit (1);
+	return (args);
 }
 
 void		cleanup(t_lsnode *root)
@@ -75,28 +61,9 @@ void		cleanup(t_lsnode *root)
 	}
 }
 
-#define SNODE node->sbuf->st_mode
-
-void		cat_files(t_lsnode *node)
+void		usage_warning(char bad)
 {
-	if ((SNODE & S_IFDIR) == S_IFDIR)
-		node->perms[0] = 'd';
-	if ((SNODE & S_IRUSR) == S_IRUSR)
-		node->perms[1] = 'r';
-	if ((SNODE & S_IWUSR) == S_IWUSR)
-		node->perms[2] = 'w';
-	if ((SNODE & S_IXUSR) == S_IXUSR)
-		node->perms[3] = 'x';
-	if ((SNODE & S_IRGRP) == S_IRGRP)
-		node->perms[4] = 'r';
-	if ((SNODE & S_IWGRP) == S_IWGRP)
-		node->perms[5] = 'w';
-	if ((SNODE & S_IXGRP) == S_IXGRP)
-		node->perms[6] = 'x';
-	if ((SNODE & S_IROTH) == S_IROTH)
-		node->perms[7] = 'r';
-	if ((SNODE & S_IWOTH) == S_IWOTH)
-		node->perms[8] = 'w';
-	if ((SNODE & S_IXOTH) == S_IXOTH)
-		node->perms[9] = 'x';
+	ft_printf("ls: illegal option -- %c\n", bad);
+	ft_printf("usage available: ls [-lartR] [file ...]\n");
+	exit (1);
 }
