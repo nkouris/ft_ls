@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/11 11:00:18 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/18 22:12:29 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/18 22:39:12 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,7 @@ static void	print_listdir(t_lsnode *root)
 void		print_directories(t_lsnode *root, t_lssort *args)
 {
 	int		pad;
-	int		i;
 
-	i = 0;
 	if (args->l)
 		print_listdir(root);
 	else
@@ -64,13 +62,9 @@ void		print_directories(t_lsnode *root, t_lssort *args)
 	//	print_blockdir(root);
 		while (root && root->name)
 		{
-			if (i)
-				pad = sizeof(root->name) + 4;
-			else
-				pad = 0;
-			ft_printf("%*s", pad, root->name);
+			pad = '\t' + sizeof(root->name);
+			ft_printf("%-*s", pad, root->name);
 			root = root->next;
-			i++;
 		}
 		ft_printf("\n");
 	}
