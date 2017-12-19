@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/14 15:42:21 by nkouris           #+#    #+#             */
-/*   Updated: 2017/11/24 23:44:27 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/18 19:52:06 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int			print_padding(t_flags *flags, int *strlen)
 
 	pad = 0;
 	prec = flags->precision;
-	if (*strlen > prec && prec > 0)
+	if (*strlen > prec && prec >= 0)
 		*strlen = prec;
 	if (*strlen > flags->fieldwidth && flags->fieldwidth > 0
 		&& flags->fieldwidth > prec)

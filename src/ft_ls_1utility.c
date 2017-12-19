@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/17 20:48:26 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/17 21:07:10 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/18 19:31:14 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,13 @@ void		use_stats(t_lsnode *node)
 	node->m_nlink = ft_numlen(NSBUF->st_nlink);
 	ft_strcpy(node->time,
 	(const char *)ctime((const time_t *)&(NSBUF->st_mtimespec.tv_sec)));
+	if (node->perms[0] == 'b' || node->perms[0] == 'c')
+	{
+		node->special = 1;
+		node->majordev = major(NSBUF->st_dev);
+		node->minordev = minor(NSBUF->st_dev);
+		node->m_devlen = ft_numlen(node->majordev) + ft_numlen(node->minordev);
+	}
 }
 
 void		fwidth_match(t_lsnode **temp, t_lsnode *node)
@@ -28,9 +35,17 @@ void		fwidth_match(t_lsnode **temp, t_lsnode *node)
 		(*temp)->m_bytelen = node->m_bytelen;
 	else
 		node->m_bytelen = (*temp)->m_bytelen;
+	if ((*temp)->m_devlen < node->m_devlen)
+		(*temp)->m_devlen = node->m_devlen;
+	else
+		node->m_devlen = (*temp)->m_devlen;
 	if ((*temp)->m_nlink < node->m_nlink)
 		(*temp)->m_nlink = node->m_nlink;
 	else
 		node->m_nlink = (*temp)->m_nlink;
+	if ((*temp)->multi)
+		node->multi = 1;
+	if ((*temp)->special)
+		node->special = 1;
 	temp = &(*temp)->next;
 }

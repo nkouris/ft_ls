@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/14 14:25:09 by nkouris           #+#    #+#             */
-/*   Updated: 2017/11/24 22:42:12 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/18 19:53:04 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static void	store_padp(const char **format, t_flags *flags, int *found,
 		}
 		else
 		{
+			flags->precision = 0;
 			while (ft_isdigit(**format))
 			{
 				num = *(*format)++ - '0';

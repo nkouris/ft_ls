@@ -20,12 +20,16 @@ typedef	struct		s_lsnode
 	ino_t			fserial;
 	char			time[26];
 	char			*fullpath;
+	char			*dirstr;
 	char			*name;
 	char			perms[12];
+	int				majordev;
+	int				minordev;
 	unsigned int	m_nlink;
 	unsigned int	m_bytelen;
 	unsigned int	m_usnlen;
 	unsigned int	m_datelen;
+	unsigned int	m_devlen;
 	struct stat		*sbuf;
 	struct passwd	*pass;
 	struct group	*group;
@@ -33,6 +37,8 @@ typedef	struct		s_lsnode
 	unsigned int	isdir : 1;
 	unsigned int	skip : 1;
 	unsigned int	solo : 1;
+	unsigned int	multi : 1;
+	unsigned int	special : 1;
 /* Link */
 	struct s_lsnode	*next;
 }					t_lsnode;
@@ -58,7 +64,8 @@ void		print_directories(t_lsnode *root, t_lssort *args);
 
 void		cat_files(t_lsnode *node);
 void		push_node(t_lsnode *new, t_lsnode **root, t_lssort *args);
-t_lsnode	*create_node(struct dirent *element, DIR *dir, char *str);
+t_lsnode	*create_node(struct dirent *element, DIR *dir, char *str,
+			unsigned int multi);
 void		check_args(char ***argv, t_lssort **args);
 
 
@@ -90,5 +97,6 @@ char		*strfpath(t_lsnode *root, char *str);
 
 void		use_stats(t_lsnode *node);
 void		fwidth_match(t_lsnode **root, t_lsnode *node);
+void		id_dirstr(t_lsnode *node);
 
 #endif

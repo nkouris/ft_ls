@@ -26,6 +26,8 @@ INC += src/libft/ft_memset
 INC += src/libft/ft_strncpy
 INC += src/libft/ft_strcat
 INC += src/libft/ft_strnew
+INC += src/libft/ft_strsplit
+INC += src/libft/ft_strsub
 
 # FTPRINTF
 INC += src/libft/ftprintf/conversion_diou

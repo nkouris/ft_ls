@@ -6,27 +6,33 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/11 17:06:10 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/17 21:09:49 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/18 22:10:16 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
 #define SNODE node->sbuf->st_mode
-/*
-void		pmarks(t_lsnode *node)
-{
-	if (node->perms[0] == 'l')
-	{
-		stat
-}
-*/
-void		cat_files(t_lsnode *node)
+
+void		type_file(t_lsnode *node)
 {
 	if ((SNODE & S_IFDIR) == S_IFDIR)
 		node->perms[0] = 'd';
+	if ((SNODE & S_IFCHR) == S_IFCHR)
+		node->perms[0] = 'c';
+	if ((SNODE & S_IFBLK) == S_IFBLK)
+		node->perms[0] = 'b';
 	if ((SNODE & S_IFLNK) == S_IFLNK)
 		node->perms[0] = 'l';
+	if ((SNODE & S_IFSOCK) == S_IFSOCK)
+		node->perms[0] = 's';
+	if ((SNODE & S_IFIFO) == S_IFIFO)
+		node->perms[0] = 'p';
+}
+
+void		cat_files(t_lsnode *node)
+{
+	type_file(node);
 	if ((SNODE & S_IRUSR) == S_IRUSR)
 		node->perms[1] = 'r';
 	if ((SNODE & S_IWUSR) == S_IWUSR)
@@ -64,7 +70,8 @@ void		push_node(t_lsnode *node, t_lsnode **root, t_lssort *args)
 	(*temp)->next = node;
 }
 
-t_lsnode	*create_node(struct dirent *element, DIR *dir, char *str)
+t_lsnode	*create_node(struct dirent *element, DIR *dir, char *str,
+			unsigned int multi)
 {
 	t_lsnode	*node;
 	struct stat	*sbuf;
@@ -72,20 +79,18 @@ t_lsnode	*create_node(struct dirent *element, DIR *dir, char *str)
 	if (!(node = (t_lsnode *)ft_memalloc(sizeof(t_lsnode)))
 		|| !(sbuf = (struct stat *)ft_memalloc(sizeof(struct stat))))
 		exit (1);
-/* Gather base info */
 	if (element)
 	{
 		node->dir = dir;
 		node->name = (char *)ft_memalloc(sizeof(element->d_name) + 1);
 		node->sbuf = sbuf;
+		node->multi = multi;
 		ft_memset(node->perms, '-', 10);
 		ft_strcpy(node->name, (const char *)(element->d_name));
-/* Gather stat info */
 		node->fullpath = strfpath(node, str);
 		lstat((const char *)node->fullpath, sbuf);
-/* Gather username and group */
-		use_stats(node);
 		cat_files(node);
+		use_stats(node);
 	}
 	else
 		ft_memdel((void **)&sbuf);
@@ -117,6 +122,4 @@ void		check_args(char ***argv, t_lssort **args)
 		}
 		(*argv)++;
 	}
-	else
-		ft_memdel((void **)args);
 }

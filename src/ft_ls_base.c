@@ -6,13 +6,13 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/11 11:00:18 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/17 20:56:11 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/18 22:12:29 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-static void	print_ldirectories(t_lsnode *root)
+static void	print_listdir(t_lsnode *root)
 {
 	t_lsnode	*temp;
 	int			blocks;
@@ -25,16 +25,29 @@ static void	print_ldirectories(t_lsnode *root)
 		blocks = blocks + temp->sbuf->st_blocks;
 		temp = temp->next;
 	}
-	if (!root->solo)
-		ft_printf("total %d\n", blocks);
 	while (root)
 	{
-		ft_printf("%-12s%-*d%-*s%-*s%*d %12s %-s\n", root->perms, root->m_nlink + 1,
-		root->sbuf->st_nlink, sizeof(root->pass->pw_name) + 1,
-		root->pass->pw_name, sizeof(root->group->gr_name) + 1,
-		root->group->gr_name, root->m_bytelen, root->sbuf->st_size,
-		&(root->time[4]), root->name);
-		root = root->next;
+		if (root->multi && root->dirstr)
+			ft_printf("\n%s:\n", root->dirstr);
+		if (!root->solo)
+		{
+			ft_printf("total %d\n", blocks);
+			blocks = 0;
+		}
+		while (root)
+		{
+			ft_printf("%-12s%-*d%-*s%-*s %*d %12s %s\n", root->perms,
+			root->m_nlink + 1, root->sbuf->st_nlink,
+			sizeof(root->pass->pw_name) + 1, root->pass->pw_name,
+			sizeof(root->group->gr_name), root->group->gr_name,
+			root->m_bytelen, root->sbuf->st_size, &(root->time[4]), root->name);
+			root = root->next;
+			if (root)
+			{
+				if (!root->solo && blocks)
+					break ;
+			}
+		}
 	}
 }
 
@@ -44,17 +57,11 @@ void		print_directories(t_lsnode *root, t_lssort *args)
 	int		i;
 
 	i = 0;
-	if (args)
+	if (args->l)
+		print_listdir(root);
+	else
 	{
-		if (args->l)
-		{
-			print_ldirectories(root);
-			root->skip = 1;
-		}
-	}
-	if (!root->skip)
-	{
-		i = 0;
+	//	print_blockdir(root);
 		while (root && root->name)
 		{
 			if (i)
@@ -89,10 +96,11 @@ static int	store_current_dir(t_lsnode **root, t_lssort *args, char *str)
 	while ((element = readdir((*root)->dir)))
 	{
 		if (!(*root)->name)
-			(*root) = create_node(element, (*root)->dir, str);
+			(*root) = create_node(element, (*root)->dir, str, (*root)->multi);
 		else
 		{
-			node = create_node(element, (*root)->dir, str);
+			node = create_node(element, (*root)->dir, str, (*root)->multi);
+			node->dirstr = str;
 			push_node(node, root, args);
 		}
 	}
@@ -116,12 +124,14 @@ int		main(int argc, char **argv)
 	t_lsnode		*root;
 	t_lssort		*args;
 
-	if (!(root = create_node(0, 0, 0)) 
+	if (!(root = create_node(0, 0, 0, 0)) 
 		|| !(args = create_args()))
 		return (1);
 	if (argc > 1)
 	{
 		check_args(&argv, &args);
+		if (argc > 2)
+			root->multi = 1;
 		args && argc == 2 ? argv = 0 : argv;
 	}
 	else

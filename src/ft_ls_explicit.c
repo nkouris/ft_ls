@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/17 19:53:05 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/17 20:57:23 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/18 15:56:38 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int		solo_check(t_lsnode **root, char *str, t_lssort *args)
 	}
 	ft_memset(node->perms, '-', 10);
 	node->solo = 1;
+	node->multi = (*root)->multi;
 	use_stats(node);
 	cat_files(node);
 	if (!(*root)->name)
