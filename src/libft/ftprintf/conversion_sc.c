@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/14 13:17:55 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/18 21:36:08 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/19 15:03:31 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void		conv_s(const char **format, t_flags *flags, va_list *args)
 	else if (str)
 	{
 		strlen = ft_strlen((const char *)str);
-		if (flags->fieldwidth > 0 || flags->precision >= 0)
+		if (flags->fieldwidth > strlen || flags->precision >= 0)
 			pad = print_padding(flags, &strlen);
 		buf_store(flags, strlen, str, 0);
 		if (pad > 0)

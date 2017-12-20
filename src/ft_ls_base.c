@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/11 11:00:18 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/18 22:39:12 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/19 20:07:54 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	print_listdir(t_lsnode *root)
 		}
 		while (root)
 		{
-			ft_printf("%-12s%-*d%-*s%-*s %*d %12s %s\n", root->perms,
+			ft_printf("%-12s%-*d%-*s%-*s %*d %.12s %s\n", root->perms,
 			root->m_nlink + 1, root->sbuf->st_nlink,
 			sizeof(root->pass->pw_name) + 1, root->pass->pw_name,
 			sizeof(root->group->gr_name), root->group->gr_name,
@@ -77,6 +77,11 @@ static int	store_current_dir(t_lsnode **root, t_lssort *args, char *str)
 
 	node = 0;
 	element = 0;
+	// Statement runs the provided str argument through opendir, which will
+	// fail if the provided str is not a vaild path.
+
+	// ***  Solocheck will only fire when explicit files are listed from the 
+	// 		current directory, thereby appending "./" to the str argument! ***
 	if (!((*root)->dir = opendir(str)))
 	{
 		if (!solo_check(root, str, args))
@@ -90,10 +95,10 @@ static int	store_current_dir(t_lsnode **root, t_lssort *args, char *str)
 	while ((element = readdir((*root)->dir)))
 	{
 		if (!(*root)->name)
-			(*root) = create_node(element, (*root)->dir, str, (*root)->multi);
+			(*root) = create_node(element, (*root), str);
 		else
 		{
-			node = create_node(element, (*root)->dir, str, (*root)->multi);
+			node = create_node(element, (*root), str);
 			node->dirstr = str;
 			push_node(node, root, args);
 		}
@@ -103,6 +108,9 @@ static int	store_current_dir(t_lsnode **root, t_lssort *args, char *str)
 
 static void	store_directories(t_lsnode **root, t_lssort *args, char **argv)
 {
+	// Base case that fires if there are no explicit arguments, or only a
+	// parameter was set, meaning that the program is being run on the current
+	// folder.
 	if (!argv)
 		store_current_dir(root, args, ".");
 	else
@@ -118,15 +126,17 @@ int		main(int argc, char **argv)
 	t_lsnode		*root;
 	t_lssort		*args;
 
-	if (!(root = create_node(0, 0, 0, 0)) 
-		|| !(args = create_args()))
+	if (!(root = create_node(0, 0, 0)) 
+		|| !(args = (t_lssort *)ft_memalloc(sizeof(t_lssort))))
 		return (1);
+	// Multiple argument handling, if there is no parameter, check args returns
+	// 0 and argv is not set to null, allowing a single explicit file ls
 	if (argc > 1)
 	{
-		check_args(&argv, &args);
 		if (argc > 2)
 			root->multi = 1;
-		args && argc == 2 ? argv = 0 : argv;
+		if (check_args(&argv, &args) && argc == 2)
+			argv = 0;
 	}
 	else
 		argv = 0;

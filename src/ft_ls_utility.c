@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/14 12:58:50 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/17 19:31:23 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/19 15:13:34 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,6 @@ int			ft_numlen(int num)
 		i++;
 	}
 	return (i);
-}
-
-t_lssort	*create_args(void)
-{
-	t_lssort	*args;
-
-	if (!(args = (t_lssort *)ft_memalloc(sizeof(t_lssort))))
-		exit (1);
-	return (args);
 }
 
 void		cleanup(t_lsnode *root)

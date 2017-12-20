@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/17 19:53:05 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/18 15:56:38 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/19 19:47:25 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int		solo_check(t_lsnode **root, char *str, t_lssort *args)
 	node->sbuf = sbuf;
 	if ((lstat((const char *)node->name, sbuf)) < 0)
 	{
-		node->fullpath=strfpath(node, ".");
+		node->fullpath = strfpath(node, ".");
 		if ((lstat((const char *)node->fullpath, sbuf)) < 0)
 			return (0);
 	}

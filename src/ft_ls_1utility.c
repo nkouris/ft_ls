@@ -6,11 +6,14 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/17 20:48:26 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/18 19:31:14 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/19 20:02:26 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+// Function to fill node with info gathered from data points contained in
+// struct stat
 
 void		use_stats(t_lsnode *node)
 {
@@ -28,6 +31,8 @@ void		use_stats(t_lsnode *node)
 		node->m_devlen = ft_numlen(node->majordev) + ft_numlen(node->minordev);
 	}
 }
+
+// Function to compare and pass values as nodes are added to the list
 
 void		fwidth_match(t_lsnode **temp, t_lsnode *node)
 {
@@ -48,4 +53,25 @@ void		fwidth_match(t_lsnode **temp, t_lsnode *node)
 	if ((*temp)->special)
 		node->special = 1;
 	temp = &(*temp)->next;
+}
+
+// Self-explanatory, will fill the list node with relevant info
+
+void	fill_node(t_lsnode *node, t_lsnode *root, char *str, 
+		struct dirent *element)
+{
+	struct stat *sbuf;
+
+	if (!(node->name = (char *)ft_memalloc(sizeof(element->d_name) + 1))
+		|| !(sbuf = (struct stat *)ft_memalloc(sizeof(struct stat))))
+		exit (1);
+	node->dir = root->dir;
+	node->sbuf = sbuf;
+	ft_memset(node->perms, '-', 10);
+	ft_strcpy(node->name, (const char *)(element->d_name));
+	node->fullpath = strfpath(node, str);
+	node->multi = root->multi;
+	lstat((const char *)node->fullpath, sbuf);
+	cat_files(node);
+	use_stats(node);
 }

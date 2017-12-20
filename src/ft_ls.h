@@ -41,6 +41,7 @@ typedef	struct		s_lsnode
 	unsigned int	special : 1;
 /* Link */
 	struct s_lsnode	*next;
+	struct s_lsnode *subdir;
 }					t_lsnode;
 
 typedef struct		s_args
@@ -64,9 +65,8 @@ void		print_directories(t_lsnode *root, t_lssort *args);
 
 void		cat_files(t_lsnode *node);
 void		push_node(t_lsnode *new, t_lsnode **root, t_lssort *args);
-t_lsnode	*create_node(struct dirent *element, DIR *dir, char *str,
-			unsigned int multi);
-void		check_args(char ***argv, t_lssort **args);
+t_lsnode	*create_node(struct dirent *element, t_lsnode *root, char *str);
+int			check_args(char ***argv, t_lssort **args);
 
 
 /**
@@ -98,5 +98,7 @@ char		*strfpath(t_lsnode *root, char *str);
 void		use_stats(t_lsnode *node);
 void		fwidth_match(t_lsnode **root, t_lsnode *node);
 void		id_dirstr(t_lsnode *node);
+void		fill_node(t_lsnode *node, t_lsnode *root, char *str,
+			struct dirent *element);
 
 #endif
