@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/17 19:53:05 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/19 19:47:25 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/20 12:21:02 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,6 @@ int		solo_check(t_lsnode **root, char *str, t_lssort *args)
 	if (!(*root)->name)
 		(*root) = node;
 	else
-		push_node(node, root, args);
+		solo_push_node(node, root, args);
 	return (1);
 }

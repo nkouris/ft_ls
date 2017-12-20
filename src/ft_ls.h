@@ -23,6 +23,7 @@ typedef	struct		s_lsnode
 	char			*dirstr;
 	char			*name;
 	char			perms[12];
+	int				namelen;
 	int				majordev;
 	int				minordev;
 	unsigned int	m_nlink;
@@ -40,7 +41,9 @@ typedef	struct		s_lsnode
 	unsigned int	multi : 1;
 	unsigned int	special : 1;
 /* Link */
+// covers directory level listing
 	struct s_lsnode	*next;
+// pointer to descend into subdirectory level listing
 	struct s_lsnode *subdir;
 }					t_lsnode;
 

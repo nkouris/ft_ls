@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/17 20:48:26 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/19 20:02:26 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/20 12:35:02 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void	fill_node(t_lsnode *node, t_lsnode *root, char *str,
 	node->sbuf = sbuf;
 	ft_memset(node->perms, '-', 10);
 	ft_strcpy(node->name, (const char *)(element->d_name));
+	node->namelen = element->d_namlen;
 	node->fullpath = strfpath(node, str);
 	node->multi = root->multi;
 	lstat((const char *)node->fullpath, sbuf);

@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/11 11:00:18 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/19 20:07:54 by nkouris          ###   ########.fr       */
+/*   Updated: 2017/12/20 12:14:40 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void		print_directories(t_lsnode *root, t_lssort *args)
 	//	print_blockdir(root);
 		while (root && root->name)
 		{
-			pad = '\t' + sizeof(root->name);
+			pad = 8 + root->namelen;
 			ft_printf("%-*s", pad, root->name);
 			root = root->next;
 		}
