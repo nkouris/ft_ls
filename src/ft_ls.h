@@ -54,54 +54,57 @@ typedef struct		s_args
 	unsigned int	a : 1;
 	unsigned int	l : 1;
 	unsigned int	t : 1;
+	unsigned int	exp : 1;
 }					t_lssort;
 
 /**
- * FT_LS_BASE
+ * Start.c 
 **/
 
-void		print_directories(t_lsnode *root, t_lssort *args);
+void		print_directories(t_lsnode *top, t_lssort *args);
+void		current_dir(t_lsnode **top, t_lssort *args, char *fname);
 
 /**
- * FT_LS_HANDLING
+ * Node_Creation.c
 **/
 
 void		cat_files(t_lsnode *node);
-void		push_node(t_lsnode *new, t_lsnode **root, t_lssort *args);
-t_lsnode	*create_node(struct dirent *element, t_lsnode *root, char *str);
-int			check_args(char ***argv, t_lssort **args);
-
+void		push_level(t_lsnode *new, t_lsnode **top, t_lssort *args);
+t_lsnode	*create_node(struct dirent *element, t_lsnode *top, char *str);
 
 /**
- * FT_LS_LISTHANDLING
+ * Explicit.c
 **/
 
-void		argsact(t_lssort *args, t_lsnode **root);
+void		argsact(t_lssort *args, t_lsnode **top);
+int			explicit(t_lsnode **top, t_lssort *args, char *str);
 
 /**
- * FT_LS_EXPLICIT
+ * Utility.c
 **/
 
-int			solo_check(t_lsnode **root, char *str, t_lssort *args);
-
-/**
- * FT_LS_UTILITY
-**/
-
-void		cleanup(t_lsnode *root);
+char		*strfpath(t_lsnode *top, char *str);
 int			ft_numlen(int num);
-t_lssort	*create_args(void);
+void		cleanup(t_lsnode *top);
 void		usage_warning(char bad);
-char		*strfpath(t_lsnode *root, char *str);
 
 /*
- * FT_LS_1UTILITY
+ * FillNode.c
 **/
 
 void		use_stats(t_lsnode *node);
-void		fwidth_match(t_lsnode **root, t_lsnode *node);
-void		id_dirstr(t_lsnode *node);
-void		fill_node(t_lsnode *node, t_lsnode *root, char *str,
+void		fieldwidth_match(t_lsnode *top, t_lsnode *node);
+void		fill_node(t_lsnode *node, t_lsnode *top, char *str,
 			struct dirent *element);
+void		type_file(t_lsnode *node);
+void		cat_files(t_lsnode *node);
+
+/*
+ * ListHandling.c
+**/
+
+void		rmhidden(t_lsnode **top);
+int			check_args(char ***argv, t_lssort **args);
+void		clean_level(t_lsnode **top, t_lsnode **temp, t_lssort *args);
 
 #endif

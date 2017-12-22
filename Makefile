@@ -6,12 +6,12 @@ OBJSRC = $(patsubst %, %.o, $(SRC))
 OBJINC = $(patsubst %, %.o, $(INC))
 
 # LS SOURCE
-SRC += src/ft_ls_base
-SRC += src/ft_ls_handling
-SRC += src/ft_ls_listhandling
-SRC += src/ft_ls_utility
-SRC += src/ft_ls_1utility
-SRC += src/ft_ls_explicit
+SRC += src/start
+SRC += src/node_creation
+SRC += src/explicit
+SRC += src/utility
+SRC += src/fill_node
+SRC += src/listhandling
 
 # GENERAL LIBFT FUNCTIONS
 INC += src/libft/ft_memalloc
@@ -28,6 +28,7 @@ INC += src/libft/ft_strcat
 INC += src/libft/ft_strnew
 INC += src/libft/ft_strsplit
 INC += src/libft/ft_strsub
+INC += src/libft/ft_strcmp
 
 # FTPRINTF
 INC += src/libft/ftprintf/conversion_diou
