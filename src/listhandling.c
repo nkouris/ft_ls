@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/17 15:20:22 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/21 19:08:26 by nkouris          ###   ########.fr       */
+/*   Updated: 2018/01/05 12:50:06 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@ void	rmhidden(t_lsnode **top)
 	{
 		(*top) = (*top)->next;
 		ft_memdel((void **)&front);
-		front = (*top);
-	}	
+		front = (*top);	
+		if (!*top)
+			break ;
+	}
 	while (front)
 	{
 		while (front->name[0] == '.')
@@ -71,22 +73,23 @@ int			check_args(char ***argv, t_lssort **args)
 
 void		clean_level(t_lsnode **top, t_lsnode **temp, t_lssort *args)
 {
-	t_lsnode *halt;
+	t_lsnode	*hold;
+	char		*store;
+	int			i;
 
-	halt = (*top);
-	if ((*top) == (*temp))
+	hold = (*top);
+	store = (*temp)->fullpath;
+	i = 0;
+	if ((*top) != (*temp))
 	{
-		(*top)->next = 0;
-		cleanup(*top);
-		(*top) = (*temp)->next;
+		while (hold->next != (*temp))
+			hold = hold->next;
+		hold->next = 0;
+		cleanup(hold);
 	}
-	else
-	{
-		while (halt != (*temp))
-			halt = halt->next;
-		halt->next = 0;
-		cleanup(halt);
-		(*top) = (*temp)->next;
-	}
-	current_dir(temp, args, (*temp)->fullpath);
+	(*top) = (*temp)->next;
+	(*temp)->next = 0;
+	cleanup((*temp));
+	(*temp) = create_node(0, 0, 0);
+	current_dir(temp, args, store);
 }

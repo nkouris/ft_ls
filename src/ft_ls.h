@@ -23,6 +23,7 @@ typedef	struct		s_lsnode
 	char			*dirstr;
 	char			*name;
 	char			perms[12];
+	char			*link;
 	int				namelen;
 	int				majordev;
 	int				minordev;
@@ -55,12 +56,19 @@ typedef struct		s_args
 	unsigned int	l : 1;
 	unsigned int	t : 1;
 	unsigned int	exp : 1;
+	unsigned int	m_nlink;
+	unsigned int	m_bytelen;
+	unsigned int	m_usnlen;
+	unsigned int	m_datelen;
+	unsigned int	m_devlen;
+
 }					t_lssort;
 
 /**
  * Start.c 
 **/
 
+void		subdir_dive(t_lsnode *top, t_lssort *args);
 void		print_directories(t_lsnode *top, t_lssort *args);
 void		current_dir(t_lsnode **top, t_lssort *args, char *fname);
 
@@ -93,7 +101,7 @@ void		usage_warning(char bad);
 **/
 
 void		use_stats(t_lsnode *node);
-void		fieldwidth_match(t_lsnode *top, t_lsnode *node);
+void		fieldwidth_match(t_lssort *args, t_lsnode *node);
 void		fill_node(t_lsnode *node, t_lsnode *top, char *str,
 			struct dirent *element);
 void		type_file(t_lsnode *node);
