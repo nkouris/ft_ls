@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:27:33 by nkouris           #+#    #+#             */
-/*   Updated: 2018/01/04 12:30:00 by nkouris          ###   ########.fr       */
+/*   Updated: 2018/02/09 17:17:06 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void		cleanup(t_lsnode *root)
 	while (root)
 	{
 		hold = root->next;
-		ft_memdel((void **)&root);	
+		free(root);	
 		root = hold;
 	}
 }

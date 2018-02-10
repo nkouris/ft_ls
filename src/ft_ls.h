@@ -12,6 +12,10 @@
 #include <grp.h>
 #include <errno.h>
 
+
+/* DELETE */
+#include <string.h>
+
 #define NSBUF node->sbuf
 
 typedef	struct		s_lsnode

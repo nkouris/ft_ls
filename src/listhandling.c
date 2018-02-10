@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/17 15:20:22 by nkouris           #+#    #+#             */
-/*   Updated: 2018/01/05 12:50:06 by nkouris          ###   ########.fr       */
+/*   Updated: 2018/02/09 17:20:48 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,16 +80,21 @@ void		clean_level(t_lsnode **top, t_lsnode **temp, t_lssort *args)
 	hold = (*top);
 	store = (*temp)->fullpath;
 	i = 0;
+	ft_printf("clean\n");
 	if ((*top) != (*temp))
 	{
 		while (hold->next != (*temp))
 			hold = hold->next;
 		hold->next = 0;
-		cleanup(hold);
+		cleanup(*top);
 	}
+	ft_printf("\nclean1\n");
 	(*top) = (*temp)->next;
 	(*temp)->next = 0;
-	cleanup((*temp));
+	ft_printf("\nclean2\n");
+	cleanup(*temp);
+	ft_printf("\nclean2end\n");
 	(*temp) = create_node(0, 0, 0);
+	ft_printf("\nnewnode\n");
 	current_dir(temp, args, store);
 }

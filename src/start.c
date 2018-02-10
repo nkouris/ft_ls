@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/11 11:00:18 by nkouris           #+#    #+#             */
-/*   Updated: 2018/01/06 15:06:58 by nkouris          ###   ########.fr       */
+/*   Updated: 2018/02/09 20:00:19 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@ void		subdir_dive(t_lsnode *top, t_lssort *args)
 	temp = top;
 	while (top)
 	{
-		if (temp->perms[0] == 'd')
+		if ((ft_strcmp(temp->name, "..") > 0) && temp->perms[0] == 'd')
 		{
+			ft_printf("is hidden? %d\n", ft_strcmp(temp->name, ".."));
 			clean_level(&top, &temp, args);
 			break ;
 		}
@@ -79,24 +80,26 @@ static void	print_listdir(t_lsnode *top, t_lssort *args)
 
 void		print_directories(t_lsnode *top, t_lssort *args)
 {
-	int			pad;
 	t_lsnode	*temp;
 
+	temp = top;
 	if (args->l)
 		print_listdir(top, args);
 	else
 	{
-		temp = top;
+		ft_printf("Start p\n");
 		while (temp)
 		{
-			pad = 8 + temp->namelen;
-			ft_printf("%-*s", pad, temp->name);
+			ft_printf("%s\n", temp->name);
 			temp = temp->next;
 		}
 		ft_printf("\n");
 	}
 	if (args->R && !args->l)
+	{
+		ft_printf("recurse\n");
 		subdir_dive(top, args);
+	}
 }
 
 void	current_dir(t_lsnode **top, t_lssort *args, char *fname)
@@ -104,7 +107,14 @@ void	current_dir(t_lsnode **top, t_lssort *args, char *fname)
 	t_lsnode 		*new;
 	struct dirent 	*element;
 
-	(*top)->dir = opendir(fname);
+
+	ft_printf("\nname: %s\ntopdir= %p\n", fname, (*top)->dir);
+	if (!((*top)->dir = opendir(fname)))
+	{
+		ft_printf("%s", strerror(errno));
+		exit(0);
+	}
+	ft_printf("\nname: %s\ntopdir= %p\n", fname, (*top)->dir);
 	while ((element = readdir((*top)->dir)))
 	{
 		if (!(*top)->name)
@@ -120,6 +130,7 @@ void	current_dir(t_lsnode **top, t_lssort *args, char *fname)
 			push_level(new, top, args);
 		}
 	}
+	closedir((*top)->dir);
 	if (!args->a)
 		rmhidden(top);
 }
@@ -147,7 +158,6 @@ void	create_level(t_lsnode **top, t_lssort *args, char **argv)
 			args->exp = 0;
 			(*top) = hold;
 		}
-		exit (0);
 	}
 }
 
@@ -165,7 +175,10 @@ int		main(int argc, char **argv)
 		argv = 0;
 	create_level(&top, args, argv);
 	if (!args->exp)
+	{
+		ft_printf("yo\n");
 		print_directories(top, args);
+	}
 //	if (top->dir)
 //	closedir(top->dir);
 //	cleanup(top);
