@@ -6,20 +6,20 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 04:03:53 by nkouris           #+#    #+#             */
-/*   Updated: 2018/02/12 04:07:48 by nkouris          ###   ########.fr       */
+/*   Updated: 2018/02/12 04:37:45 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftls.h"
 #include <stdio.h>
 
-void	multiname(char *str, t_queue *explicit, t_args *args)
+void		multiname(char *str, t_queue *explicit)
 {
 	t_info		*info;
 	char		*new;
 
 	if (!(info = (t_info *)ft_memalloc(sizeof(t_info))))
-		exit (0);
+		exit(0);
 	if (!ft_strchr(str, '/') && *str != '.')
 	{
 		info->name = str;
@@ -32,18 +32,17 @@ void	multiname(char *str, t_queue *explicit, t_args *args)
 	if (setlstat(str, info))
 	{
 		if (!ft_enqueue(&explicit, (void *)info, sizeof(t_info)))
-			exit (0);
+			exit(0);
 	}
 	else
 	{
 		if (str == new)
 			free(str);
-		args->mul = 1;
 		free(info);
 	}
 }
 
-void	onefile(char *name, t_args *args)
+void		onefile(char *name, t_args *args)
 {
 	char	*start;
 
@@ -64,7 +63,7 @@ t_queue		*buildir(DIR *d_base, char *base)
 
 	if (!(info = (t_info *)ft_memalloc(sizeof(t_info)))
 		|| !((level = (t_queue *)ft_memalloc(sizeof(t_queue)))))
-		exit (0);
+		exit(0);
 	while ((info->entry = readdir(d_base)))
 	{
 		info->name = ft_strdup(info->entry->d_name);
@@ -76,7 +75,7 @@ t_queue		*buildir(DIR *d_base, char *base)
 		{
 			if (!(ft_enqueue(&level, info, sizeof(t_info)))
 				|| !(info = (t_info *)ft_memalloc(sizeof(t_info))))
-				exit (0);
+				exit(0);
 		}
 		else
 		{
@@ -88,10 +87,10 @@ t_queue		*buildir(DIR *d_base, char *base)
 	return (level);
 }
 
-void	onedir(char *base, t_args *args)
+void		onedir(char *base, t_args *args)
 {
 	DIR		*d_base;
-	t_queue	*level;		
+	t_queue	*level;
 
 	if (!(d_base = opendir(base)))
 	{
@@ -105,7 +104,7 @@ void	onedir(char *base, t_args *args)
 	if (!args->a)
 		pophidden(level);
 	printlevel(level, args);
-	if (args->R && level->first)
+	if (args->rrr && level->first)
 	{
 		pophidden(level);
 		subdirdive(level, args);

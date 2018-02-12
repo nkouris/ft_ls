@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 23:23:57 by nkouris           #+#    #+#             */
-/*   Updated: 2018/02/12 01:09:50 by nkouris          ###   ########.fr       */
+/*   Updated: 2018/02/12 04:17:27 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ t_dblist			*ft_dblistnew(void *content, size_t content_size);
 int					ft_enqueue(t_queue **key, void *data, size_t size);
 void				ft_queue_postsort(t_queue *key);
 t_dblist			*ft_dblistpop(t_dblist *node);
-void				ft_queue_destruc(t_queue *key, t_dblist *(*f)(t_dblist *del));
+void				ft_queue_destruc(t_queue *key,
+					t_dblist *(*f)(t_dblist *del));
 
 #endif

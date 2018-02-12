@@ -6,13 +6,13 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/10 17:30:34 by nkouris           #+#    #+#             */
-/*   Updated: 2018/02/12 03:44:11 by nkouris          ###   ########.fr       */
+/*   Updated: 2018/02/12 04:24:15 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftls.h"
 
-int		setlstat(char *str, t_info *info)
+int			setlstat(char *str, t_info *info)
 {
 	struct stat buf;
 
@@ -47,7 +47,6 @@ t_dblist	*singledelargv(t_dblist *del)
 	return (next);
 }
 
-
 t_dblist	*singledel(t_dblist *del)
 {
 	t_dblist	*next;
@@ -65,7 +64,7 @@ t_dblist	*singledel(t_dblist *del)
 	return (next);
 }
 
-void	pophidden(t_queue *level)
+void		pophidden(t_queue *level)
 {
 	t_dblist	*del;
 
@@ -78,7 +77,7 @@ void	pophidden(t_queue *level)
 	}
 }
 
-int		lexosort(void *one, void *two)
+int			lexosort(void *one, void *two)
 {
 	int			comp;
 	t_info		*a;
@@ -89,7 +88,7 @@ int		lexosort(void *one, void *two)
 	if (!a->entry || !b->entry)
 		comp = ft_strcmp(a->fullpath, b->fullpath);
 	else
-		comp = ft_strcmp(a->name, b->name); 
+		comp = ft_strcmp(a->name, b->name);
 	if (comp < 1)
 		return (1);
 	return (2);

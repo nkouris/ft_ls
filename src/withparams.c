@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/10 15:52:19 by nkouris           #+#    #+#             */
-/*   Updated: 2018/02/12 01:45:48 by nkouris          ###   ########.fr       */
+/*   Updated: 2018/02/12 04:25:59 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,17 @@ void	usage_warning(char bad)
 {
 	ft_printf("ls: illegal option -- %c\n", bad);
 	ft_printf("usage available: ls [-lartR] [file ...]\n");
-	exit (0);
+	exit(0);
 }
 
-char 	*concatpath(char *fin, char *add)
+char	*concatpath(char *fin, char *add)
 {
 	char	*temp;
 	size_t	len;
 
 	len = ft_strlen(fin) + ft_strlen(add);
 	if (!(temp = ft_strnew(len)))
-		exit (0);
+		exit(0);
 	ft_strcpy(temp, add);
 	ft_strcat(temp, fin);
 	return (temp);
@@ -41,7 +41,7 @@ int		paramatch(char *argv, t_args *args)
 	{
 		if (*argv == 'l' ? args->l = 1 : 0)
 			(argv)++ ? found++ : found;
-		if (*argv == 'R' ? args->R = 1 : 0)
+		if (*argv == 'R' ? args->rrr = 1 : 0)
 			(argv)++ ? found++ : found;
 		if (*argv == 'a' ? args->a = 1 : 0)
 			(argv)++ ? found++ : found;

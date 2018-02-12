@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/10 10:21:05 by nkouris           #+#    #+#             */
-/*   Updated: 2018/02/12 04:06:19 by nkouris          ###   ########.fr       */
+/*   Updated: 2018/02/12 04:37:47 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ void	buildlevels(t_queue *explicit, t_args *args)
 			ft_printf("\n%s:\n", FPATH);
 		onedir(FPATH, args);
 		hold = ft_dblistpop(node);
-		singledel(node);
+		if (!args->rrr)
+			singledelargv(node);
+		else
+			singledel(node);
 		node = hold;
 		args->mul = 1;
 		if (node)
@@ -66,17 +69,17 @@ void	findexp(char **argv, t_args *args)
 
 	parseflags(&argv, args);
 	if (!(explicit = (t_queue *)ft_memalloc(sizeof(t_queue))))
-		exit (0);
+		exit(0);
 	if (!(*argv))
 		onedir(".", args);
 	while (*argv)
-		multiname(*argv++, explicit, args);
+		multiname(*argv++, explicit);
 	if (explicit->first)
 		explicit->first = ft_mergesort(explicit->first, &lexosort);
 	else
 	{
 		free(explicit);
-		exit (0);
+		exit(0);
 	}
 	ft_queue_postsort(explicit);
 	expfiles(explicit, args);

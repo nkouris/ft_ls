@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 03:58:22 by nkouris           #+#    #+#             */
-/*   Updated: 2018/02/12 04:08:14 by nkouris          ###   ########.fr       */
+/*   Updated: 2018/02/12 04:26:22 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_dblist	*newlevel(t_dblist *node, t_args *args)
 	return (hold);
 }
 
-void	subdirdive(t_queue *level, t_args *args)
+void		subdirdive(t_queue *level, t_args *args)
 {
 	t_dblist	*node;
 
