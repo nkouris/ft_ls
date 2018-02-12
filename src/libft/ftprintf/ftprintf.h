@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*   ftprintf.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/19 14:57:08 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/12 17:59:26 by nkouris          ###   ########.fr       */
+/*   Created: 2018/02/10 11:50:28 by nkouris           #+#    #+#             */
+/*   Updated: 2018/02/10 11:52:02 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PRINTF_H
-# define FT_PRINTF_H
+#ifndef FTPRINTF_H
+# define FTPRINTF_H
 
 # include <stdarg.h>
 # include <limits.h>

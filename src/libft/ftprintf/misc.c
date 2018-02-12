@@ -6,11 +6,11 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/14 15:54:39 by nkouris           #+#    #+#             */
-/*   Updated: 2017/11/24 23:53:09 by nkouris          ###   ########.fr       */
+/*   Updated: 2018/02/10 12:38:04 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "ftprintf.h"
 
 static void	re_assigned(t_flags *flags, char *new)
 {

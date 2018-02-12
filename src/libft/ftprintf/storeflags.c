@@ -6,11 +6,11 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/14 14:25:09 by nkouris           #+#    #+#             */
-/*   Updated: 2017/12/18 19:53:04 by nkouris          ###   ########.fr       */
+/*   Updated: 2018/02/10 12:38:14 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "ftprintf.h"
 
 static void	store_padp(const char **format, t_flags *flags, int *found,
 		va_list *args)
@@ -32,7 +32,6 @@ static void	store_padp(const char **format, t_flags *flags, int *found,
 		}
 		else
 		{
-			flags->precision = 0;
 			while (ft_isdigit(**format))
 			{
 				num = *(*format)++ - '0';

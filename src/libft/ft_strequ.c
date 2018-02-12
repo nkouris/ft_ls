@@ -1,19 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                       :+:      :+:    :+:   */
+/*   ft_strequ.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/09/20 15:41:55 by nkouris           #+#    #+#             */
-/*   Updated: 2017/09/28 13:47:32 by nkouris          ###   ########.fr       */
+/*   Created: 2017/09/21 10:50:37 by nkouris           #+#    #+#             */
+/*   Updated: 2017/09/29 00:36:39 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int		ft_isalpha(int c)
+#include "libft.h"
+
+int		ft_strequ(char const *s1, char const *s2)
 {
-	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
-		return (1);
-	else
+	if (s1 == 0 || s2 == 0)
 		return (0);
+	return (ft_strcmp(s1, s2) == 0);
 }

@@ -1,19 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                       :+:      :+:    :+:   */
+/*   printing.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/09/20 15:41:55 by nkouris           #+#    #+#             */
-/*   Updated: 2017/09/28 13:47:32 by nkouris          ###   ########.fr       */
+/*   Created: 2018/02/10 17:40:17 by nkouris           #+#    #+#             */
+/*   Updated: 2018/02/12 01:00:41 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int		ft_isalpha(int c)
+#include "ftls.h"
+
+#define NAME (((t_info *)(temp->data))->name)
+
+void	printlevel(t_queue *level, t_args *args)
 {
-	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
-		return (1);
+	t_dblist	*temp;
+
+	if (args->r)
+	{
+		temp = level->last;
+		while (temp)
+		{
+			ft_printf("%s\n", NAME);
+			temp = temp->prec;
+		}
+		return ;
+	}
 	else
-		return (0);
+	{
+		temp = level->first;
+		while (temp)
+		{
+			if (NAME == "\n")
+				;
+			else
+				ft_printf("%s\n", NAME);
+			temp = temp->next;
+		}
+		return ;
+	}
 }

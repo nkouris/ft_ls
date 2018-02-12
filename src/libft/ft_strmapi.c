@@ -1,19 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                       :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/09/20 15:41:55 by nkouris           #+#    #+#             */
-/*   Updated: 2017/09/28 13:47:32 by nkouris          ###   ########.fr       */
+/*   Created: 2017/09/20 18:21:34 by nkouris           #+#    #+#             */
+/*   Updated: 2017/09/29 00:01:15 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int		ft_isalpha(int c)
+#include "libft.h"
+
+char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
-		return (1);
-	else
+	int		length;
+	int		i;
+	char	*new;
+
+	if (!s)
 		return (0);
+	i = 0;
+	length = ft_strlen(s);
+	new = ft_strnew(length);
+	if (!new)
+		return (0);
+	while (i < length)
+	{
+		new[i] = f(i, *s++);
+		i++;
+	}
+	return (new);
 }

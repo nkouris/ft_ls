@@ -1,20 +1,18 @@
 PROGRAM = ftls
 NAME = libftls.a 
 FLAGS = -Wall -Werror -Wextra -g
+INCLUDES = -I src/libft/ -I src/libft/ftprintf -I src/
 CC = gcc
 OBJSRC = $(patsubst %, %.o, $(SRC))
 OBJINC = $(patsubst %, %.o, $(INC))
 
 # LS SOURCE
 SRC += src/start
-SRC += src/node_creation
-SRC += src/explicit
-SRC += src/utility
-SRC += src/fill_node
-SRC += src/listhandling
+SRC += src/filehandler
+SRC += src/printing
+SRC += src/withparams
 
 # GENERAL LIBFT FUNCTIONS
-INC += src/libft/ft_memalloc
 INC += src/libft/ft_strlen
 INC += src/libft/ft_memalloc
 INC += src/libft/ft_strcpy
@@ -29,6 +27,14 @@ INC += src/libft/ft_strnew
 INC += src/libft/ft_strsplit
 INC += src/libft/ft_strsub
 INC += src/libft/ft_strcmp
+INC += src/libft/ft_memcpy
+INC += src/libft/ft_memmove
+INC += src/libft/ft_queue
+INC += src/libft/ft_queue_util
+INC += src/libft/ft_dblistnew
+INC += src/libft/ft_mergesort
+INC += src/libft/ft_strdup
+INC += src/libft/ft_strchr
 
 # FTPRINTF
 INC += src/libft/ftprintf/conversion_diou
@@ -50,7 +56,7 @@ $(NAME): $(OBJINC) $(OBJSRC)
 
 %.o: %.c
 	@ echo "Compiling $<..."
-	@ $(CC) $(FLAGS) -c $< -o $@
+	@ $(CC) $(FLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	@ /bin/rm -f $(OBJSRC)

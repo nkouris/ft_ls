@@ -5,182 +5,244 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/12/11 11:00:18 by nkouris           #+#    #+#             */
-/*   Updated: 2018/02/09 20:00:19 by nkouris          ###   ########.fr       */
+/*   Created: 2018/02/10 10:21:05 by nkouris           #+#    #+#             */
+/*   Updated: 2018/02/12 03:44:10 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "ftls.h"
+#include <stdio.h>
 
-void		subdir_dive(t_lsnode *top, t_lssort *args)
+#define SMODE (((t_info *)(node->data))->sbuf->st_mode)
+#define SFUB (((t_info *)(node->data))->sbuf)
+#define FPATH (((t_info *)(node->data))->fullpath)
+#define NAME (((t_info *)(node->data))->name)
+
+void	onedir(char *base, t_args *args);
+
+t_dblist	*newlevel(t_dblist *node, t_args *args)
 {
-	t_lsnode	*temp;
+	t_dblist	*hold;
 
-	temp = top;
-	while (top)
+	if ((ft_strcmp("..", NAME)) && ((ft_strcmp(".", NAME))))
 	{
-		if ((ft_strcmp(temp->name, "..") > 0) && temp->perms[0] == 'd')
-		{
-			ft_printf("is hidden? %d\n", ft_strcmp(temp->name, ".."));
-			clean_level(&top, &temp, args);
-			break ;
-		}
-		else
-			temp = temp->next;
-		if (!temp)
-			top = 0;
+		ft_printf("\n%s:\n", FPATH);
+		onedir(FPATH, args);
 	}
-	if (temp)
-	{
-		if (!args->exp)
-			ft_printf("\n%s:\n", temp->dirstr);
-		args->exp = 0;
-		print_directories(temp, args);
-	}
-	if (top)
-		subdir_dive(top, args);
+	hold = ft_dblistpop(node);
+	singledel(node);
+	return (hold);
 }
 
-static void	print_listdir(t_lsnode *top, t_lssort *args)
+void	subdirdive(t_queue *level, t_args *args)
 {
-	t_lsnode	*temp;
-	int			blocks;
+	t_dblist	*node;
 
-	blocks = 0;
-	temp = top;
-	while (temp)
+	node = level->first;
+	while (node)
 	{
-		blocks = blocks + temp->sbuf->st_blocks;
-		temp = temp->next;
-	}
-	temp = top;
-	while (temp)
-	{
-		if (!temp->solo)
+		if ((SMODE & S_IFDIR) != S_IFDIR)
 		{
-			ft_printf("total %d\n", blocks);
-			blocks = 0;
-		}
-		while (temp)
-		{
-			ft_printf("%-12s%-*d%-*s%-*s%*d %.12s %s", temp->perms,
-			args->m_nlink + 1, temp->sbuf->st_nlink,
-			sizeof(temp->pass->pw_name) + 1, temp->pass->pw_name,
-			sizeof(temp->group->gr_name), temp->group->gr_name,
-			args->m_bytelen, temp->sbuf->st_size, &(temp->time[4]), temp->name);
-			if (temp->link)
-				ft_printf(" -> %s", temp->link);
-			ft_printf("\n");
-			temp = temp->next;
-		}
-	}
-	if (args->R)
-		subdir_dive(top, args);
-}
-
-void		print_directories(t_lsnode *top, t_lssort *args)
-{
-	t_lsnode	*temp;
-
-	temp = top;
-	if (args->l)
-		print_listdir(top, args);
-	else
-	{
-		ft_printf("Start p\n");
-		while (temp)
-		{
-			ft_printf("%s\n", temp->name);
-			temp = temp->next;
-		}
-		ft_printf("\n");
-	}
-	if (args->R && !args->l)
-	{
-		ft_printf("recurse\n");
-		subdir_dive(top, args);
-	}
-}
-
-void	current_dir(t_lsnode **top, t_lssort *args, char *fname)
-{
-	t_lsnode 		*new;
-	struct dirent 	*element;
-
-
-	ft_printf("\nname: %s\ntopdir= %p\n", fname, (*top)->dir);
-	if (!((*top)->dir = opendir(fname)))
-	{
-		ft_printf("%s", strerror(errno));
-		exit(0);
-	}
-	ft_printf("\nname: %s\ntopdir= %p\n", fname, (*top)->dir);
-	while ((element = readdir((*top)->dir)))
-	{
-		if (!(*top)->name)
-		{
-			fill_node((*top), (*top), fname, element);
-			fieldwidth_match(args, (*top));
-			(*top)->dirstr = fname;
-		}
-		else
-		{
-			new = create_node(element, (*top), fname);
-			new->dirstr = fname;
-			push_level(new, top, args);
-		}
-	}
-	closedir((*top)->dir);
-	if (!args->a)
-		rmhidden(top);
-}
-
-void	create_level(t_lsnode **top, t_lssort *args, char **argv)
-{
-	int			i;
-	t_lsnode	*hold;
-
-	i = 0;
-	if (!argv)
-		current_dir(top, args, ".");
-	else
-	{
-		while (*argv)
-			i += explicit(top, args, *argv++);
-		while ((*top) && i)
-		{
-			hold = (*top)->next;
-			(*top)->next = 0;
-			if ((*top)->perms[0] == 'd')
-				subdir_dive((*top), args);
+			if (node == level->first)
+			{
+				node = singledel(node);
+				level->first = node;
+			}
 			else
-				print_directories((*top), args);
-			args->exp = 0;
-			(*top) = hold;
+				node = singledel(node);
+		}
+		else
+			node = newlevel(node, args);
+	}
+	free(level);
+}
+
+void	multiname(char *str, t_queue *explicit, t_args *args)
+{
+	t_info		*info;
+	char		*new;
+
+	if (!(info = (t_info *)ft_memalloc(sizeof(t_info))))
+		exit (0);
+	if (!ft_strchr(str, '/') && *str != '.')
+	{
+		info->name = str;
+		new = concatpath(str, "./");
+		info->fullpath = new;
+		str = new;
+	}
+	else
+		info->fullpath = ft_strdup(str);
+	if (setlstat(str, info))
+	{
+		if (!ft_enqueue(&explicit, (void *)info, sizeof(t_info)))
+			exit (0);
+	}
+	else
+	{
+		if (str == new)
+			free(str);
+		args->mul = 1;
+		free(info);
+	}
+}
+
+void	onefile(char *name, t_args *args)
+{
+	char	*start;
+
+	start = ft_strchr(name, '/');
+	if (start)
+		start++;
+	else
+		return ;
+	ft_printf("%s\n", start);
+	args = 0;
+}
+
+#define IFPATH (info->fullpath)
+#define INAME (info->name)
+
+t_queue		*buildir(DIR *d_base, char *base)
+{
+	t_info	*info;
+	t_queue	*level;
+	char	*new;
+
+	if (!(info = (t_info *)ft_memalloc(sizeof(t_info)))
+		|| !((level = (t_queue *)ft_memalloc(sizeof(t_queue)))))
+		exit (0);
+	while ((info->entry = readdir(d_base)))
+	{
+		info->name = ft_strdup(info->entry->d_name);
+		IFPATH = concatpath("/", base);
+		new = concatpath(INAME, IFPATH);
+		free(IFPATH);
+		IFPATH = new;
+		if (setlstat(IFPATH, info))
+		{
+			if (!(ft_enqueue(&level, info, sizeof(t_info)))
+				|| !(info = (t_info *)ft_memalloc(sizeof(t_info))))
+				exit (0);
+		}
+		else
+		{
+			free(INAME);
+			free(IFPATH);
 		}
 	}
+	free(info);
+	return (level);
+}
+
+void	onedir(char *base, t_args *args)
+{
+	DIR		*d_base;
+	t_queue	*level;		
+
+	if (!(d_base = opendir(base)))
+	{
+		ft_printf("ftls: %s: %s\n", base, strerror(errno));
+		return ;
+	}
+	level = buildir(d_base, base);
+	closedir(d_base);
+	level->first = ft_mergesort(level->first, &lexosort);
+	ft_queue_postsort(level);
+	if (!args->a)
+		pophidden(level);
+	printlevel(level, args);
+	if (args->R && level->first)
+	{
+		pophidden(level);
+		subdirdive(level, args);
+	}
+	else
+		ft_queue_destruc(level, &singledel);
+}
+
+void	buildlevels(t_queue *explicit, t_args *args)
+{
+	t_dblist	*node;
+	t_dblist	*hold;
+
+	node = explicit->first;
+	while (node)
+	{
+		if (args->mul)
+			ft_printf("\n%s:\n", FPATH);
+		onedir(FPATH, args);
+		hold = ft_dblistpop(node);
+		singledel(node);
+		node = hold;
+		args->mul = 1;
+		if (node)
+			ft_printf("\n");
+	}
+}
+
+void	expfiles(t_queue *explicit, t_args *args)
+{
+	t_dblist	*node;
+//	t_dblist	*hold;
+
+	node = explicit->first;
+	while (node)
+	{
+		if ((SMODE & S_IFDIR) != S_IFDIR)
+		{
+			onefile(FPATH, args);
+			args->mul = 1;
+			if (node == explicit->first)
+			{
+				node = singledelargv(node);
+				explicit->first = node;
+//				ft_popfront(explicit);
+//				node = singledelargv(node);
+			}
+			else
+			{
+//				hold = ft_dblistpop(node);
+//				singledelargv(node);
+//				node = hold;
+				singledelargv(node);
+				node = node->next;
+			}
+		}
+		else
+			node = node->next;
+	}
+}
+
+void	findexp(char **argv, t_args *args)
+{
+	t_queue		*explicit;
+
+	parseflags(&argv, args);
+	if (!(explicit = (t_queue *)ft_memalloc(sizeof(t_queue))))
+		exit (0);
+	if (!(*argv))
+		onedir(".", args);
+	while (*argv)
+		multiname(*argv++, explicit, args);
+	if (explicit->first)
+		explicit->first = ft_mergesort(explicit->first, &lexosort);
+	else
+	{
+		free(explicit);
+		exit (0);
+	}
+	ft_queue_postsort(explicit);
+	expfiles(explicit, args);
+	buildlevels(explicit, args);
 }
 
 int		main(int argc, char **argv)
 {
-	t_lsnode		*top;
-	t_lssort		*args;
-	int				i;
+	t_args	args;
 
-	if (!(top = (t_lsnode *)ft_memalloc(sizeof(t_lsnode))) 
-		|| !(args = (t_lssort *)ft_memalloc(sizeof(t_lssort))))
-		return (1);
-	argc > 1 ? (i = check_args(&argv, &args)) : (i = 0);
-	if ((i && argc == 2) || argc == 1)
-		argv = 0;
-	create_level(&top, args, argv);
-	if (!args->exp)
-	{
-		ft_printf("yo\n");
-		print_directories(top, args);
-	}
-//	if (top->dir)
-//	closedir(top->dir);
-//	cleanup(top);
-	return(0);
+	if (argc == 1)
+		onedir(".", &args);
+	else
+		findexp(++argv, &args);
 }

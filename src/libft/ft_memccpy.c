@@ -1,25 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memset.c                                        :+:      :+:    :+:   */
+/*   ft_memccpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/09/21 14:50:10 by nkouris           #+#    #+#             */
-/*   Updated: 2018/02/10 12:35:49 by nkouris          ###   ########.fr       */
+/*   Created: 2017/09/24 15:13:06 by nkouris           #+#    #+#             */
+/*   Updated: 2017/09/28 23:14:41 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memset(void *b, int c, size_t len)
+void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
 {
-	unsigned char	*cpy;
-	unsigned int	i;
+	unsigned int			i;
+	unsigned char			*c_dst;
+	unsigned char const		*c_src;
+	unsigned char			c_c;
 
 	i = 0;
-	cpy = b;
-	while (i < len)
-		cpy[i++] = c;
-	return (cpy);
+	c_dst = (unsigned char*)dst;
+	c_src = (unsigned const char *)src;
+	c_c = (unsigned char)c;
+	while (i < n)
+	{
+		if (c_src[i] == c_c)
+		{
+			c_dst[i] = c_src[i];
+			i++;
+			c_dst = &(c_dst[i]);
+			return (c_dst);
+		}
+		c_dst[i] = c_src[i];
+		i++;
+	}
+	return (0);
 }
