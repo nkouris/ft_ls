@@ -11,6 +11,8 @@ SRC += src/start
 SRC += src/filehandler
 SRC += src/printing
 SRC += src/withparams
+SRC += src/dive
+SRC += src/accruedata
 
 # GENERAL LIBFT FUNCTIONS
 INC += src/libft/ft_strlen

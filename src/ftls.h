@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/10 10:46:22 by nkouris           #+#    #+#             */
-/*   Updated: 2018/02/12 03:30:20 by nkouris          ###   ########.fr       */
+/*   Updated: 2018/02/12 04:12:18 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,13 @@
 # include <string.h>
 # include <sys/errno.h>
 # include <sys/stat.h>
+
+#define SMODE (((t_info *)(node->data))->sbuf->st_mode)
+#define SFUB (((t_info *)(node->data))->sbuf)
+#define FPATH (((t_info *)(node->data))->fullpath)
+#define NAME (((t_info *)(node->data))->name)
+#define IFPATH (info->fullpath)
+#define INAME (info->name)
 
 typedef struct			s_info
 {
@@ -40,6 +47,21 @@ typedef struct			s_args
 		bool			rec;
 }						t_args;
 
+/*
+**		dive ...................................................................
+*/
+
+t_dblist	*newlevel(t_dblist *node, t_args *args);
+void	subdirdive(t_queue *level, t_args *args);
+
+/*
+**		accruedata .............................................................
+*/
+
+void		multiname(char *str, t_queue *explicit, t_args *args);
+void		onefile(char *name, t_args *args);
+t_queue		*buildir(DIR *d_base, char *base);
+void		onedir(char *base, t_args *args);
 
 /*
 **		printing ...............................................................

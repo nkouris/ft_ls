@@ -6,38 +6,38 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/10 17:40:17 by nkouris           #+#    #+#             */
-/*   Updated: 2018/02/12 01:00:41 by nkouris          ###   ########.fr       */
+/*   Updated: 2018/02/12 04:12:20 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ftls.h"
 
-#define NAME (((t_info *)(temp->data))->name)
+#define NAME (((t_info *)(node->data))->name)
 
 void	printlevel(t_queue *level, t_args *args)
 {
-	t_dblist	*temp;
+	t_dblist	*node;
 
 	if (args->r)
 	{
-		temp = level->last;
-		while (temp)
+		node = level->last;
+		while (node)
 		{
 			ft_printf("%s\n", NAME);
-			temp = temp->prec;
+			node = node->prec;
 		}
 		return ;
 	}
 	else
 	{
-		temp = level->first;
-		while (temp)
+		node = level->first;
+		while (node)
 		{
 			if (NAME == "\n")
 				;
 			else
 				ft_printf("%s\n", NAME);
-			temp = temp->next;
+			node = node->next;
 		}
 		return ;
 	}
