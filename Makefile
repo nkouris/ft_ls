@@ -13,6 +13,7 @@ SRC += src/printing
 SRC += src/withparams
 SRC += src/dive
 SRC += src/accruedata
+SRC += src/collectl
 
 # GENERAL LIBFT FUNCTIONS
 INC += src/libft/ft_strlen
@@ -37,6 +38,7 @@ INC += src/libft/ft_dblistnew
 INC += src/libft/ft_mergesort
 INC += src/libft/ft_strdup
 INC += src/libft/ft_strchr
+INC += src/libft/ft_numlen
 
 # FTPRINTF
 INC += src/libft/ftprintf/conversion_diou

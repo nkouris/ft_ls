@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/10 17:30:34 by nkouris           #+#    #+#             */
-/*   Updated: 2018/02/12 04:24:15 by nkouris          ###   ########.fr       */
+/*   Updated: 2018/02/14 14:33:55 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ void		pophidden(t_queue *level)
 {
 	t_dblist	*del;
 
+	if (!level->first)
+		return ;
 	while (*(((t_info *)(level->first->data))->name) == '.')
 	{
 		del = ft_popfront(level);

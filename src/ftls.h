@@ -6,7 +6,7 @@
 /*   By: nkouris <nkouris@student.42.us.org>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/10 10:46:22 by nkouris           #+#    #+#             */
-/*   Updated: 2018/02/12 04:37:48 by nkouris          ###   ########.fr       */
+/*   Updated: 2018/02/14 17:18:14 by nkouris          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@
 # include <string.h>
 # include <sys/errno.h>
 # include <sys/stat.h>
+# include <sys/types.h>
+# include <pwd.h>
+# include <grp.h>
+# include <uuid/uuid.h>
 
 # define SMODE (((t_info *)(node->data))->sbuf->st_mode)
 # define SFUB (((t_info *)(node->data))->sbuf)
@@ -27,6 +31,15 @@
 # define NAME (((t_info *)(node->data))->name)
 # define IFPATH (info->fullpath)
 # define INAME (info->name)
+# define NAME (((t_info *)(node->data))->name)
+# define BLOCK (((t_info *)(node->data))->sbuf->st_blocks)
+# define LINKS (((t_info *)(node->data))->sbuf->st_nlink) 
+# define USER ((getpwuid(((t_info *)(node->data))->sbuf->st_uid))->pw_name)
+# define GROUP ((getgrgid(((t_info *)(node->data))->sbuf->st_gid))->gr_name)
+# define BYTES (((t_info *)(node->data))->sbuf->st_size)
+# define MAJOR (major(((t_info *)(node->data))->sbuf->st_rdev))
+# define MINOR (minor(((t_info *)(node->data))->sbuf->st_rdev))
+# define TIME (ctime(&(SFUB->st_mtimespec.tv_sec)))
 
 typedef struct			s_info
 {
@@ -45,7 +58,26 @@ typedef struct			s_args
 	bool				a;
 	bool				mul;
 	bool				rec;
+	bool				links;
 }						t_args;
+
+typedef struct			s_width
+{
+	int					col1;
+	int					col2;
+	int					col3;
+	int					col4;
+	int					devmaj;
+	int					devmin;
+}						t_width;
+
+
+/*
+**		collectl ...............................................................
+*/
+
+void					getperms(char **perm, t_dblist *node, t_args *args);
+void					widthcalc(t_dblist *node, t_width *width);
 
 /*
 **		dive ...................................................................
