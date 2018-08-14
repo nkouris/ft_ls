@@ -1,5 +1,5 @@
 PROGRAM = ftls
-NAME = libftls.a 
+NAME = libft.a 
 FLAGS = -Wall -Werror -Wextra -g
 INCLUDES = -I src/libft/ -I src/libft/ftprintf -I src/
 CC = gcc
@@ -54,9 +54,9 @@ all: $(NAME)
 
 $(NAME): $(OBJINC) $(OBJSRC)
 	@ echo "Building static library..."
-	@ ar -rcs $(NAME) $(OBJSRC) $(OBJINC)
+	@ ar -rcs $(NAME) $(OBJINC)
 	@ echo "Compiling ftls program"
-	@ $(CC) $(FLAGS) -L . -l ftls -o $(PROGRAM)
+	@ $(CC) $(FLAGS) -L . -l ft  $(OBJSRC) -o $(PROGRAM)
 
 %.o: %.c
 	@ echo "Compiling $<..."
